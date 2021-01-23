@@ -38,7 +38,7 @@ app.use(express.json())
 app.use(express.static(path.join(__dirname, './public')))
 
 // Define Routes
-app.use('/api', require('./app/routes'))
+app.use('/api/v1', require('./app/routes'))
 app.use('/auth', require('./app/routes/authRoute'))
 
 // Listening to the server

@@ -1,25 +1,25 @@
 // ===== Response
 module.exports = (res, status, success, message, results, ...optionalProperty) => {
   const [prevPageLink, nextPageLink] = optionalProperty
-  if (results.length > 1) {
-    res.status(status).json({
+  if (results && Array.isArray(results)) {
+    return res.status(status).json({
       success,
       message,
       results,
       pageInfo: {
-        totalData: results.length,
-        previousPageLink: optionalProperty ? prevPageLink : null,
-        nextPageLink: optionalProperty ? nextPageLink : null
+        length: results.length,
+        previousMovie: optionalProperty ? prevMovie : null,
+        nextMovie: optionalProperty ? nextMovie : null
       }
     })
-  } else if (typeof results === 'object') {
-    res.status(status).json({
+  } else if (results && !Array.isArray(results)) {
+    return res.status(status).json({
       success,
       message,
       results
     })
   } else {
-    res.status(status).json({
+    return res.status(status).json({
       success,
       message
     })
