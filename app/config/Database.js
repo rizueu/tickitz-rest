@@ -33,7 +33,7 @@ class Database {
     })
   }
 
-  findAll (by = {}) {
+  findAll (by) {
     return new Promise((resolve, reject) => {
       if (by) {
         const key = Object.keys(by)
@@ -50,6 +50,16 @@ class Database {
         })
         console.log(query.sql)
       }
+    })
+  }
+
+  destroy (id) {
+    return new Promise((resolve, reject) => {
+      const sql = `DELETE FROM ${this.table} WHERE id = ?`
+      const query = this.db.query(sql, id, (error, results) => {
+        return error ? reject(new Error(error)) : resolve(results)
+      })
+      console.log(query.sql)
     })
   }
 

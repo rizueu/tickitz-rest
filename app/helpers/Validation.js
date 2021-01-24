@@ -23,3 +23,23 @@ exports.newPasswordValidation = data => {
   })
   return schema.validate(data)
 }
+
+exports.addMovieValidation = data => {
+  const schema = Joi.object().keys({
+    title: Joi.string().required(),
+    releaseDate: Joi.date().required(),
+    duration: Joi.number(),
+    category: Joi.required(),
+    director: Joi.string().required(),
+    casts: Joi.string().required(),
+    synopsis: Joi.string()
+  })
+  return schema.validate(data)
+}
+
+exports.addGenreValidation = data => {
+  const schema = Joi.object().keys({
+    name: Joi.string().required()
+  })
+  return schema.validate(data)
+}

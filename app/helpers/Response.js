@@ -8,8 +8,8 @@ module.exports = (res, status, success, message, results, ...optionalProperty) =
       results,
       pageInfo: {
         length: results.length,
-        previousMovie: optionalProperty ? prevMovie : null,
-        nextMovie: optionalProperty ? nextMovie : null
+        previousPageLink: optionalProperty ? prevPageLink : null,
+        nextPageLink: optionalProperty ? nextPageLink : null
       }
     })
   } else if (results && !Array.isArray(results)) {
