@@ -27,7 +27,7 @@ exports.createGenre = async (req, res) => {
 exports.getGenres = async (req, res) => {
   // Pagination
   const {
-    limit = 3,
+    limit = 5,
     page = 1,
     search = '',
     order = 'id',
@@ -35,6 +35,10 @@ exports.getGenres = async (req, res) => {
   } = req.query
   const dataLimit = Number(limit) * Number(page)
   const offset = (Number(page) - 1) * Number(limit)
+  // Limit cannot be minuy
+  if (limit < 1) {
+    return response(res, 400, false, 'Bad Request')
+  }
   try {
     const genres = await Genres.getAllGenres(limit, offset, search, order, sort)
     const nextGenres = await Genres.getAllGenres(limit, offset + dataLimit, search, order, sort)

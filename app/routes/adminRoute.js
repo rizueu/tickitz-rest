@@ -1,9 +1,15 @@
 const router = require('express').Router()
-const { createMovie } = require('../controllers/moviesController')
+const { createMovie, getMovies, getMovieById, updateMovie, deleteMovie } = require('../controllers/moviesController')
 const { createGenre, getGenres, getGenreById, updateGenre, deleteGenre } = require('../controllers/genresController')
 
 router.route('/movies')
   .post(createMovie)
+  .get(getMovies)
+
+router.route('/movies/:id')
+  .get(getMovieById)
+  .patch(updateMovie)
+  .delete(deleteMovie)
 
 // Genre route for admin
 router.route('/genres')

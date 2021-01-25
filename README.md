@@ -27,21 +27,21 @@ This is non-optimized minimal backend app with mysql and node. Backend app theme
 - POST `/auth/login` Route for sign into system
 - PATCH `/auth/forgot_password` Route for reset password
 
-- GET `/api/v1/genre/:genre` Route for get Movie by its genre **(Not done yet)**
-- GET `/api/v1/movies` Route for get all Movie **(Not done yet)**
-- GET `/api/v1/movies/:id` Route for get Movie by Id **(Not done yet)**
-- GET `/api/v1/cinemas` Route for get all Cinemas **(Not done yet)**
-- GET `/api/v1/cinemas/:id` Route for get Cinemas by Id **(Not done yet)**
+- GET `/api/v1/genre/:genre` Route for get Movie by its genre
+- GET `/api/v1/movies` Route for get all Movie
+- GET `/api/v1/movies/:id` Route for get Movie by Id
+- GET `/api/v1/cinemas` Route for get all Cinemas
+- GET `/api/v1/cinemas/:id` Route for get Cinemas by Id
 
-- GET `/api/v1/admin/movies` Route for get all Movies **(Not done yet)**
+- GET `/api/v1/admin/movies` Route for get all Movies
 - GET `/api/v1/admin/genres` Route for get all Genre
 - GET `/api/v1/admin/cinemas` Route for get all Cinema **(Not done yet)**
-- GET `/api/v1/admin/movies/:id` Route for get Movies by id **(Not done yet)**
+- GET `/api/v1/admin/movies/:id` Route for get Movies by id
 - GET `/api/v1/admin/genres/:id` Route for get Genre by id
 - GET `/api/v1/admin/cinemas/:id` Route for get Cinema by id **(Not done yet)**
-- POST/PUT `/api/v1/admin/movies` Route for register new Movies **(Not done yet)**
+- POST/PUT `/api/v1/admin/movies` Route for register new Movies
 - POST/PUT `/api/v1/admin/genres` Route for register new Genre
 - POST/PUT `/api/v1/admin/cinemas` Route for register new Cinema **(Not done yet)**
-- PATCH/DELETE `/api/v1/admin/movies/:id` Route for modify movie on database **(Not done yet)**
+- PATCH/DELETE `/api/v1/admin/movies/:id` Route for modify movie on database
 - PATCH/DELETE `/api/v1/admin/genres/:id` Route for modify movie on database
 - PATCH/DELETE `/api/v1/admin/cinemas/:id` Route for modify movie on database **(Not done yet)**

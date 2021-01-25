@@ -36,6 +36,9 @@ router.get('/genre/:genre', async (req, res) => {
   }
 })
 
+router.get('/movies', require('../controllers/moviesController').getMovies)
+router.get('/movies/:id', require('../controllers/moviesController').getMovieById)
+
 router.use('/admin', authMiddleware.verifyToken, require('./adminRoute'))
 
 module.exports = router

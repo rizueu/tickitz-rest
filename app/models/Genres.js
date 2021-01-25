@@ -6,11 +6,11 @@ class Genres extends Database {
     this.table = 'genres'
   }
 
-  getAllGenres (limit, offset, keyword, by, sort) {
+  getAllGenres (limit, offset, search, order, sort) {
     return new Promise((resolve, reject) => {
-      const sql = `SELECT * FROM genres  
-                   WHERE name LIKE "%${keyword}%"
-                   ORDER BY ${by} ${sort} 
+      const sql = `SELECT * FROM ${this.table}  
+                   WHERE name LIKE "%${search}%"
+                   ORDER BY ${order} ${sort} 
                    LIMIT ${limit} OFFSET ${offset}`
       this.db.query(sql, (error, results) => {
         if (error) return reject(new Error(error))
@@ -19,7 +19,7 @@ class Genres extends Database {
     })
   }
 
-  getMoviesByGenre (genre, limit, offset, keyword, order, sort) {
+  getMoviesByGenre (genre, limit, offset, order, sort) {
     return new Promise((resolve, reject) => {
       const sql = `SELECT 
                     movies.id, movies.title,
