@@ -1,0 +1,1 @@
+SELECT c.picture, c.cinemaName, c.address, c.pricePerSeat, t.showTime  FROM cinemas c INNER JOIN showtimes st ON c.id = st.cinemaId INNER JOIN times t ON st.timeId = t.id INNER JOIN movies m ON st.movieId = m.id WHERE st.showTimeDate = ? OR c.city = ?

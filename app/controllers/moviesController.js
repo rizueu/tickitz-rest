@@ -7,7 +7,6 @@ const Movies = require('../models/Movies')
 // Import Helpers
 const upload = require('../helpers/Upload')
 const response = require('../helpers/Response')
-const { findAll } = require('../models/Movies')
 
 exports.createMovie = async (req, res) => {
   try {
@@ -45,7 +44,7 @@ exports.getMovies = async (req, res) => {
   } = req.query
   const dataLimit = Number(limit) * Number(page)
   const offset = (Number(page) - 1) * Number(limit)
-  // Limit cannot be minuy
+  // Limit cannot be minus
   if (limit < 1) {
     return response(res, 400, false, 'Bad Request')
   }
@@ -70,6 +69,19 @@ exports.getMovieById = async (req, res) => {
     // Checking if genre is exist
     if (results.length < 1) return response(res, 400, false, `Movie with id: ${id} is not exists`)
     return response(res, 200, true, `Movie with id: ${id}`, results[0])
+  } catch (error) {
+    return response(res, 500, false, error.message)
+  }
+}
+
+exports.getMoviesByMonth = async (req, res) => {
+  let { month } = req.params
+  month = month.charAt(0).toUpperCase() + month.slice(1)
+  try {
+    const results = await Movies.getMoviesByMonth({ month })
+    // Checking if genre is exist
+    if (results.length < 1) return response(res, 400, false, `Movie with month: ${month} is not exists`)
+    return response(res, 200, true, `Movie with month: ${month}`, results[0])
   } catch (error) {
     return response(res, 500, false, error.message)
   }

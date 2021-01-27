@@ -79,7 +79,7 @@ class Movies extends Database {
             director: item.director,
             casts: item.casts,
             synopsis: item.gorgeus,
-            picture: `${process.env.APP_URL}/uploads/${item.picture}`,
+            picture: `${process.env.APP_URL}/public/movies/${item.picture}`,
             genres: movieGenres.filter(genreItem => genreItem.id === item.id).map(item => item.genre).join(', '),
             createdAt: item.createdAt,
             updatedAt: item.updatedAt
@@ -120,7 +120,62 @@ class Movies extends Database {
           })
 
           let data = results.filter((item, index, array) => {
-            console.log(item.id + ' ' + array[index + (index >= array.length - 1 ? 0 : 1)].id)
+            return ((item.id !== ((index >= array.length - 1 ? 0 : array[index + 1].id))))
+          })
+
+          data = data.map((item, index) => {
+            return {
+              id: item.id,
+              title: item.title,
+              releaseDate: item.releaseDate,
+              month: item.month,
+              duration: item.duration,
+              category: item.category,
+              director: item.director,
+              casts: item.casts,
+              synopsis: item.gorgeus,
+              picture: `${process.env.APP_URL}/uploads/${item.picture}`,
+              genres: movieGenres.filter(genreItem => genreItem.id === item.id).map(item => item.genre).join(', '),
+              createdAt: item.createdAt,
+              updatedAt: item.updatedAt
+            }
+          })
+          return resolve(data)
+        }
+      })
+      console.log(query.sql)
+    })
+  }
+
+  getMoviesByMonth (month) {
+    return new Promise((resolve, reject) => {
+      const sql = `SELECT movies.id, movies.title,
+                   movies.picture, movies.releaseDate,
+                   movies.month, movies.category,
+                   movies.duration, movies.director,
+                   movies.casts, movies.synopsis,
+                   movies.createdAt, movies.updatedAt,
+                   genres.name AS genres FROM movies
+                   INNER JOIN movie_genres ON 
+                   movies.id = movie_genres.movie_id
+                   INNER JOIN genres ON
+                   genres.id = movie_genres.genre_id
+                   WHERE movies.?`
+      const query = this.db.query(sql, month, (error, results) => {
+        if (error) {
+          return reject(new Error(error))
+        } else if (results.length < 1) {
+          return reject(new Error(`Movie with month: ${month} is not exists`))
+        } else {
+          const movieGenres = []
+          results.forEach((item) => {
+            movieGenres.push({
+              id: item.id,
+              genre: item.genres
+            })
+          })
+
+          let data = results.filter((item, index, array) => {
             return ((item.id !== ((index >= array.length - 1 ? 0 : array[index + 1].id))))
           })
 

@@ -23,25 +23,36 @@ This is non-optimized minimal backend app with mysql and node. Backend app theme
 
 ## API SPECS
 
-- POST `/auth/register` Route for signup an account
-- POST `/auth/login` Route for sign into system
-- PATCH `/auth/forgot_password` Route for reset password
+- POST `/auth/register` Route for signup an account **(NEW)**
+- POST `/auth/login` Route for sign into system **(NEW)**
+- PATCH `/auth/forgot_password` Route for reset password **(NEW)**
+
+- POST `/api/v1/moviegoers` Route for register become a member **(NEW)**
+
+USER ROUTE
 
 - GET `/api/v1/genre/:genre` Route for get Movie by its genre
 - GET `/api/v1/movies` Route for get all Movie
 - GET `/api/v1/movies/:id` Route for get Movie by Id
+- GET `/api/v1/movies/month/:month` Route for get movie by month(releaseDate) **(NEW)**
 - GET `/api/v1/cinemas` Route for get all Cinemas
 - GET `/api/v1/cinemas/:id` Route for get Cinemas by Id
+- GET `/api/v1/showtimes` Route for get schedule of showtimes **(NEW)**
+
+ADMIN ROUTE
 
 - GET `/api/v1/admin/movies` Route for get all Movies
 - GET `/api/v1/admin/genres` Route for get all Genre
-- GET `/api/v1/admin/cinemas` Route for get all Cinema **(Not done yet)**
+- GET `/api/v1/admin/cinemas` Route for get all Cinema
 - GET `/api/v1/admin/movies/:id` Route for get Movies by id
 - GET `/api/v1/admin/genres/:id` Route for get Genre by id
-- GET `/api/v1/admin/cinemas/:id` Route for get Cinema by id **(Not done yet)**
+- GET `/api/v1/admin/cinemas/:id` Route for get Cinema by id
+- GET `/api/v1/admin/times` Route for get all showtime from table times **(NEW)**
 - POST/PUT `/api/v1/admin/movies` Route for register new Movies
 - POST/PUT `/api/v1/admin/genres` Route for register new Genre
-- POST/PUT `/api/v1/admin/cinemas` Route for register new Cinema **(Not done yet)**
+- POST/PUT `/api/v1/admin/cinemas` Route for register new Cinema
+- POST/PUT `/api/v1/admin/times` Route for create new times **(NEW)**
+- POST/PUT `/api/v1/admin/showtimes` Route for create new schedule of showtimes **(NEW)**
 - PATCH/DELETE `/api/v1/admin/movies/:id` Route for modify movie on database
 - PATCH/DELETE `/api/v1/admin/genres/:id` Route for modify movie on database
-- PATCH/DELETE `/api/v1/admin/cinemas/:id` Route for modify movie on database **(Not done yet)**
+- PATCH/DELETE `/api/v1/admin/cinemas/:id` Route for modify movie on database
