@@ -23,13 +23,21 @@ class Database {
 
   findOne (by = {}) {
     return new Promise((resolve, reject) => {
-      const key = Object.keys(by)
-      const value = Object.values(by)
-      const sql = `SELECT ${key} FROM ${this.table} WHERE ${key}=?`
-      const query = this.db.query(sql, value, (error, results) => {
-        return error ? reject(new Error(error)) : resolve(results)
-      })
-      console.log(query.sql)
+      if (typeof by === 'object') {
+        const key = Object.keys(by)
+        const value = Object.values(by)
+        const sql = `SELECT ${key} FROM ${this.table} WHERE ${key}=?`
+        const query = this.db.query(sql, value, (error, results) => {
+          return error ? reject(new Error(error)) : resolve(results)
+        })
+        console.log(query.sql)
+      } else {
+        const sql = `SELECT ${by} FROM ${this.table}`
+        const query = this.db.query(sql, (error, results) => {
+          return error ? reject(new Error(error)) : resolve(results)
+        })
+        console.log(query.sql)
+      }
     })
   }
 

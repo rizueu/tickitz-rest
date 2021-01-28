@@ -183,14 +183,14 @@ class Movies extends Database {
             return {
               id: item.id,
               title: item.title,
+              picture: `${process.env.APP_URL}/public/movies/${item.picture}`,
               releaseDate: item.releaseDate,
               month: item.month,
-              duration: item.duration,
               category: item.category,
+              duration: item.duration,
               director: item.director,
               casts: item.casts,
               synopsis: item.gorgeus,
-              picture: `${process.env.APP_URL}/uploads/${item.picture}`,
               genres: movieGenres.filter(genreItem => genreItem.id === item.id).map(item => item.genre).join(', '),
               createdAt: item.createdAt,
               updatedAt: item.updatedAt

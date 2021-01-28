@@ -1,11 +1,15 @@
 // Import Modules
 const moment = require('moment')
 const fs = require('fs')
+
 // Import Model
 const Movies = require('../models/Movies')
+const Auth = require('../models/Auth')
+const Moviegoers = require('../models/Moviegoers')
 
 // Import Helpers
 const upload = require('../helpers/Upload')
+const transporter = require('../config/Mail')
 const response = require('../helpers/Response')
 
 exports.createMovie = async (req, res) => {
@@ -27,7 +31,23 @@ exports.createMovie = async (req, res) => {
     }
     const results = await Movies.createMovie(data)
     const newMovie = await Movies.findAll({ id: results.insertId })
-    if (results.affectedRows > 0) return response(res, 200, true, 'Successfully create a new Movie', newMovie[0])
+    if (results.affectedRows > 0) {
+      const recipients = []
+      const user = await Auth.findOne('email')
+      const moviegoers = await Moviegoers.findOne('email')
+      user.forEach(item => recipients.push(item.email))
+      moviegoers.forEach(item => recipients.push(item.email))
+      transporter.sendMail({
+        from: `${process.env.SMTP_USERNAME}`,
+        to: recipients,
+        subject: 'Update New Movie',
+        html: `<h3>${newMovie[0].title}</h3>`
+      }, (error, info) => {
+        if (error) return response(res, 500, false, error.response)
+        return response(res, 201, true, 'Successfully registered a new User.', info)
+      })
+      return response(res, 200, true, 'Successfully create a new Movie', newMovie[0])
+    }
   } catch (error) {
     return response(res, 500, false, error.message)
   }
@@ -81,7 +101,7 @@ exports.getMoviesByMonth = async (req, res) => {
     const results = await Movies.getMoviesByMonth({ month })
     // Checking if genre is exist
     if (results.length < 1) return response(res, 400, false, `Movie with month: ${month} is not exists`)
-    return response(res, 200, true, `Movie with month: ${month}`, results[0])
+    return response(res, 200, true, `Movie with month: ${month}`, results)
   } catch (error) {
     return response(res, 500, false, error.message)
   }

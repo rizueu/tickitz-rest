@@ -18,14 +18,22 @@ This is non-optimized minimal backend app with mysql and node. Backend app theme
   ```
 - And then
   ```
-  npx nodemon
+  npm start
   ```
+
+# Flowchart
+
+![alt text](https://github.com/rizueu/tickitz-rest/blob/main/tickitz-backend-flowchart.jpg?raw=true)
 
 ## API SPECS
 
 - POST `/auth/register` Route for signup an account **(NEW)**
 - POST `/auth/login` Route for sign into system **(NEW)**
 - PATCH `/auth/forgot_password` Route for reset password **(NEW)**
+- PATCH `/auth/activate` Route for activated new user account **(NEW)**
+- PATCH `/auth/password/:id/:email` Route for edit user password **(NEW)**
+- PATCH `/auth/user/:email` Route for edit user profile **(NEW)**
+- GET `/api/auth/user/:id` Route for get all user by id **(NEW)**
 
 - POST `/api/v1/moviegoers` Route for register become a member **(NEW)**
 

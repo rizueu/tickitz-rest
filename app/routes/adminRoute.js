@@ -3,6 +3,7 @@ const { createMovie, getMovies, getMovieById, updateMovie, deleteMovie } = requi
 const { createGenre, getGenres, getGenreById, updateGenre, deleteGenre } = require('../controllers/genresController')
 const { createCinema, getCinemas, getCinemaById, updateCinema, deleteCinema } = require('../controllers/cinemasController')
 const { createTime, getTimes } = require('../controllers/timesController')
+const { buyTicket } = require('../controllers/transactionsController')
 // Import Models
 const Showtimes = require('../models/Showtimes')
 // Import Helpers
@@ -44,6 +45,9 @@ router.route('/cinemas/:id')
 router.route('/times')
   .post(createTime)
   .get(getTimes)
+
+router.route('/transactions')
+  .post(buyTicket)
 
 // Route for create showtimes
 router.post('/showtimes', async (req, res) => {
