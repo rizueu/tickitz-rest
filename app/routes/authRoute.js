@@ -1,12 +1,13 @@
 const router = require('express').Router()
 const { register, activate, login, forgotPassword, editUser, editPassword, getUser } = require('../controllers/authController')
+const authMiddleware = require('../middlewares/auth')
 
 router.post('/register', register)
 router.post('/login', login)
 router.patch('/forgot_password', forgotPassword)
 router.patch('/activate', activate)
-router.patch('/user/:id', editUser)
-router.patch('/password/:id/:emai', editPassword)
-router.get('/user/:id', getUser)
+router.patch('/password/:id/:email', editPassword)
+router.patch('/user/:id', authMiddleware.verifyToken, editUser)
+router.get('/user/:id', authMiddleware.verifyToken, getUser)
 
 module.exports = router

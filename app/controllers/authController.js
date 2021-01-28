@@ -5,6 +5,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/Auth')
 // Import Helpers
 const { registerValidation, loginValidation, newPasswordValidation } = require('../helpers/Validation')
+const upload = require('../helpers/Upload')
 const transporter = require('../config/Mail')
 const response = require('../helpers/Response')
 
@@ -142,11 +143,11 @@ exports.forgotPassword = async (req, res) => {
 exports.editUser = async (req, res) => {
   try {
     const previousResult = await User.getUserByCondition({
-      id: req.data.id
+      id: req.userData.id
     })
     let picture = previousResult[0].picture
     if (req.files) {
-      picture = await upload(req, 'profile photo')
+      picture = await upload(req, 'profile_picture')
 
       if (typeof picture === 'object') {
         return response(res, picture.status, picture.success, picture.message)
@@ -155,19 +156,61 @@ exports.editUser = async (req, res) => {
 
     const hash = await bcrypt.hash(req.body.password, 8)
     const body = {
-      first_name: req.body.first_name,
-      last_name: req.body.last_name,
+      firstName: req.body.firstName,
+      lastName: req.body.lastName,
       email: req.body.email,
       password: hash,
       picture,
       phone: req.body.phone
     }
-    const results = await User.update(req.data.id, req.body.email, body)
+    const results = await User.update(req.userData.id, req.body.email, body)
 
     if (!results) {
       return response(res, 400, false, 'Failed to edit user account')
     } else {
       return response(res, 200, true, 'Your account has been updated')
+    }
+  } catch (err) {
+    console.log(err)
+    return response(res, 500, false, 'Server Error')
+  }
+}
+
+exports.editPassword = async (req, res) => {
+  if (req.body.password.length > 15 || req.body.password.length < 5) {
+    return response(res, 400, false, 'Password min 5 character and max 15 character')
+  }
+
+  try {
+    const hash = await bcrypt.hash(req.body.password, 8)
+    const body = { password: hash }
+    const results = await User.update(req.params.id, req.params.email, body)
+
+    if (!results) {
+      return response(res, 400, false, 'Failed to edit password')
+    } else {
+      return response(res, 200, true, 'Password has been updated')
+    }
+  } catch (err) {
+    console.log(err)
+    return response(res, 500, false, 'Server Error')
+  }
+}
+
+exports.getUser = async (req, res) => {
+  try {
+    const result = await User.getUserByCondition({
+      id: req.params.id
+    })
+
+    if (!result) {
+      return response(res, 400, false, `User with id ${req.params.id} unavailable`)
+    } else {
+      const data = {
+        ...result[0],
+        poster: process.env.APP_URL.concat('/uploads/', result[0].poster)
+      }
+      return response(res, 200, true, 'Successfully to get user with id ' + req.params.id, data)
     }
   } catch (err) {
     console.log(err)

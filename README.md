@@ -32,8 +32,8 @@ This is non-optimized minimal backend app with mysql and node. Backend app theme
 - PATCH `/auth/forgot_password` Route for reset password **(NEW)**
 - PATCH `/auth/activate` Route for activated new user account **(NEW)**
 - PATCH `/auth/password/:id/:email` Route for edit user password **(NEW)**
-- PATCH `/auth/user/:email` Route for edit user profile **(NEW)**
-- GET `/api/auth/user/:id` Route for get all user by id **(NEW)**
+- PATCH `/auth/user/:id` Route for edit user profile **(NEW)**
+- GET `/auth/user/:id` Route for get all user by id **(NEW)**
 
 - POST `/api/v1/moviegoers` Route for register become a member **(NEW)**
 
