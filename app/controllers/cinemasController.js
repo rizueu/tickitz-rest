@@ -19,10 +19,6 @@ exports.createCinema = async (req, res) => {
   const picture = await upload(req, 'cinemas')
 
   try {
-    // Check the cinemas
-    const cinemaExist = await Cinemas.findOne({ cinemaName })
-    if (cinemaExist.length > 0) return response(res, 400, false, `Cinema with name: ${cinemaName} is already exists.`)
-
     const results = await Cinemas.create({
       cinemaName,
       address,

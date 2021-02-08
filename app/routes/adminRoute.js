@@ -2,8 +2,7 @@ const router = require('express').Router()
 const { createMovie, getMovies, getMovieById, updateMovie, deleteMovie } = require('../controllers/moviesController')
 const { createGenre, getGenres, getGenreById, updateGenre, deleteGenre } = require('../controllers/genresController')
 const { createCinema, getCinemas, getCinemaById, updateCinema, deleteCinema } = require('../controllers/cinemasController')
-const { createTime, getTimes } = require('../controllers/timesController')
-const { buyTicket } = require('../controllers/transactionsController')
+const { createTime, getTimes, getTimeId } = require('../controllers/timesController')
 // Import Models
 const Showtimes = require('../models/Showtimes')
 // Import Helpers
@@ -45,13 +44,11 @@ router.route('/cinemas/:id')
 router.route('/times')
   .post(createTime)
   .get(getTimes)
-
-router.route('/transactions')
-  .post(buyTicket)
+  .get(getTimeId)
 
 // Route for create showtimes
 router.post('/showtimes', async (req, res) => {
-  const { timeId, cinemaId, movieId } = req.query
+  const { timeId, cinemaId, movieId } = req.body
   if (!timeId || !cinemaId || !movieId) return response(res, 400, false, 'Bad Request')
   try {
     const results = await Showtimes.create({

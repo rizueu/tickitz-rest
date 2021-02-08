@@ -31,15 +31,16 @@ class Movies extends Database {
           if (error) return reject(new Error(error))
           if (typeof genreId === 'object') {
             genreId.forEach(item => {
-              this.db.query('INSERT INTO movie_genres SET ?', { movie_id: response.insertId, genre_id: item }, (error, results) => {
-                return (error) ? reject(new Error(error)) : resolve(results)
+              this.db.query('INSERT INTO movie_genres SET ?', { movie_id: response.insertId, genre_id: item }, (error) => {
+                if (error) return reject(new Error(error))
               })
             })
           } else {
-            this.db.query('INSERT INTO movie_genres SET ?', { movie_id: response.insertId, genre_id: genreId }, (error, results) => {
-              return (error) ? reject(new Error(error)) : resolve(results)
+            this.db.query('INSERT INTO movie_genres SET ?', { movie_id: response.insertId, genre_id: genreId }, (error) => {
+              if (error) return reject(new Error(error))
             })
           }
+          return (error) ? reject(new Error(error)) : resolve(response)
         })
       })
     })
@@ -78,8 +79,8 @@ class Movies extends Database {
             category: item.category,
             director: item.director,
             casts: item.casts,
-            synopsis: item.gorgeus,
-            picture: `${process.env.APP_URL}/public/movies/${item.picture}`,
+            synopsis: item.synopsis,
+            picture: `${process.env.APP_URL}/movies/${item.picture}`,
             genres: movieGenres.filter(genreItem => genreItem.id === item.id).map(item => item.genre).join(', '),
             createdAt: item.createdAt,
             updatedAt: item.updatedAt
@@ -133,8 +134,8 @@ class Movies extends Database {
               category: item.category,
               director: item.director,
               casts: item.casts,
-              synopsis: item.gorgeus,
-              picture: `${process.env.APP_URL}/uploads/${item.picture}`,
+              synopsis: item.synopsis,
+              picture: `${process.env.APP_URL}/movies/${item.picture}`,
               genres: movieGenres.filter(genreItem => genreItem.id === item.id).map(item => item.genre).join(', '),
               createdAt: item.createdAt,
               updatedAt: item.updatedAt
@@ -165,7 +166,8 @@ class Movies extends Database {
         if (error) {
           return reject(new Error(error))
         } else if (results.length < 1) {
-          return reject(new Error(`Movie with month: ${month} is not exists`))
+          const { month: season } = month
+          return reject(new Error(`Movie with month: ${season} is not exists`))
         } else {
           const movieGenres = []
           results.forEach((item) => {
@@ -183,14 +185,14 @@ class Movies extends Database {
             return {
               id: item.id,
               title: item.title,
-              picture: `${process.env.APP_URL}/public/movies/${item.picture}`,
+              picture: `${process.env.APP_URL}/movies/${item.picture}`,
               releaseDate: item.releaseDate,
               month: item.month,
               category: item.category,
               duration: item.duration,
               director: item.director,
               casts: item.casts,
-              synopsis: item.gorgeus,
+              synopsis: item.synopsis,
               genres: movieGenres.filter(genreItem => genreItem.id === item.id).map(item => item.genre).join(', '),
               createdAt: item.createdAt,
               updatedAt: item.updatedAt

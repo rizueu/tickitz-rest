@@ -1,4 +1,3 @@
-const { response } = require('express')
 const Database = require('../config/Database')
 
 class Cinemas extends Database {
@@ -7,10 +6,10 @@ class Cinemas extends Database {
     this.table = 'cinemas'
   }
 
-  getShowtimes (showTimeDate, city) {
+  getShowtimes (showTimeDate, city, movieId) {
     return new Promise((resolve, reject) => {
-      const sql = 'SELECT c.id, c.picture, c.cinemaName, c.address, c.pricePerSeat, t.showTime  FROM cinemas c INNER JOIN showtimes st ON c.id = st.cinemaId INNER JOIN times t ON st.timeId = t.id INNER JOIN movies m ON st.movieId = m.id WHERE st.showTimeDate = ? AND c.city = ?'
-      const query = this.db.query(sql, [showTimeDate, city], (error, results) => {
+      const sql = 'SELECT m.id AS movieId, m.title AS movieTitle, m.category, c.id, c.picture, c.cinemaName, c.address, c.pricePerSeat, c.city, st.id AS showTimeId, st.showTimeDate, t.showTime FROM cinemas c INNER JOIN showtimes st ON c.id = st.cinemaId INNER JOIN times t ON st.timeId = t.id INNER JOIN movies m ON st.movieId = m.id WHERE st.showTimeDate = ? AND c.city = ? AND m.id = ?'
+      const query = this.db.query(sql, [showTimeDate, city, movieId], (error, results) => {
         if (error) return reject(new Error(error))
         return resolve(results)
       })

@@ -1,5 +1,7 @@
 // Import Modules
 const bcrypt = require('bcrypt')
+const Cryptr = require('cryptr')
+const cryptr = new Cryptr(process.env.APP_KEY)
 const jwt = require('jsonwebtoken')
 // Import Model
 const User = require('../models/Auth')
@@ -38,11 +40,11 @@ exports.register = async (req, res) => {
       transporter.sendMail({
         from: `${process.env.SMTP_USERNAME}`,
         to: `${newUser[0].email}`,
-        subject: 'Forgot Password',
-        html: `<a href="${process.env.APP_URL}/auth/activate?id=${newUser[0].id}&email=${newUser[0].email}">${process.env.APP_URL}/auth/activate?id=${newUser[0].id}&email=${newUser[0].email}</a>`
+        subject: 'Thanks, for registering your account',
+        html: `<a href="http://localhost:3000/auth/activate?id=${newUser[0].id}&key=${cryptr.encrypt(newUser[0].email)}">http://localhost:3000/auth/activate?id=${newUser[0].id}&key=${cryptr.encrypt(newUser[0].email)}</a>`
       }, (error, info) => {
         if (error) return response(res, 500, false, error.response)
-        return response(res, 201, true, 'Successfully registered a new User.', info)
+        return response(res, 201, true, 'Thanks, your registered. please check your email to verify your account', info)
       })
     }
   } catch (error) {
@@ -51,7 +53,7 @@ exports.register = async (req, res) => {
 }
 
 exports.activate = async (req, res) => {
-  const { id, email } = req.query
+  const { id, email } = req.body
   if (!id && !email) {
     return response(res, 400, false, 'Invalid Request')
   }
@@ -81,8 +83,8 @@ exports.login = async (req, res) => {
       return response(res, 400, false, 'You must verifying, your account!')
     }
     // Create and assign a token
-    const { APP_KEY } = process.env
-    const token = jwt.sign({ id: user[0].id, role: user[0].role }, APP_KEY)
+    const { APP_KEY, APP_URL } = process.env
+    const token = jwt.sign({ id: user[0].id, fullName: `${user[0].firstName} ${user[0].lastName}`, role: user[0].role, picture: `${APP_URL}/profile/${user[0].picture}` }, APP_KEY)
     return response(res, 200, true, 'Login successfuly', {
       id: user[0].id,
       email: user[0].email,
@@ -129,7 +131,7 @@ exports.forgotPassword = async (req, res) => {
         from: `${process.env.SMTP_USERNAME}`,
         to: `${userEmail[0].email}`,
         subject: 'Forgot Password',
-        html: `<a href="${process.env.APP_URL}/auth/forgot_password?id=${userEmail[0].id}&email=${userEmail[0].email}">${process.env.APP_URL}/auth/forgot_password?id=${userEmail[0].id}email=${userEmail[0].email}</a>`
+        html: `<a href="http://localhost:3000/auth/reset?id=${userEmail[0].id}&key=${cryptr.encrypt(userEmail[0].email)}">http://localhost:3000/auth/reset?id=${userEmail[0].id}&key=${cryptr.encrypt(userEmail[0].email)}</a>`
       }, (error, info) => {
         if (error) return response(res, 500, false, error.response)
         return response(res, 202, true, info)
@@ -143,7 +145,7 @@ exports.forgotPassword = async (req, res) => {
 exports.editUser = async (req, res) => {
   try {
     const previousResult = await User.getUserByCondition({
-      id: req.userData.id
+      id: req.data.id
     })
     let picture = previousResult[0].picture
     if (req.files) {
@@ -163,7 +165,7 @@ exports.editUser = async (req, res) => {
       picture,
       phone: req.body.phone
     }
-    const results = await User.update(req.userData.id, req.body.email, body)
+    const results = await User.update(req.data.id, req.body.email, body)
 
     if (!results) {
       return response(res, 400, false, 'Failed to edit user account')

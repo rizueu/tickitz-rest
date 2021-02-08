@@ -7,16 +7,20 @@ const authMiddleware = require('../middlewares/auth')
 const Genres = require('../models/Genres')
 const Moviegoers = require('../models/Moviegoers')
 const Cinemas = require('../models/Cinemas')
+const Showtimes = require('../models/Showtimes')
 const Auth = require('../models/Auth')
 // Import Helpers
 const response = require('../helpers/Response')
 const transporter = require('../config/Mail')
+
+const ticketController = require('../controllers/ticketController')
 
 router.use(upload({ createParentPath: true }))
 
 router.use('/movies', require('./moviesRoute'))
 router.use('/genres', require('./genresRoute'))
 router.use('/cinemas', require('./cinemasRoute'))
+router.use('/times', require('./timesRoute'))
 
 router.get('/genre/:genre', async (req, res) => {
   const { genre } = req.params
@@ -70,9 +74,9 @@ router.post('/moviegoers', async (req, res) => {
 })
 
 router.get('/showtimes', async (req, res) => {
-  const { showTimeDate = moment().format('YYYY-MM-D'), city = 'Jakarta' } = req.body
+  const { showTimeDate = moment(Date.now()).format('YYYY-MM-D'), city = 'Jakarta', movieId } = req.query
   try {
-    const showtimes = await Cinemas.getShowtimes(showTimeDate, city)
+    const showtimes = await Cinemas.getShowtimes(showTimeDate, city, movieId)
     const showTimes = []
     showtimes.forEach(item => {
       showTimes.push({
@@ -86,10 +90,15 @@ router.get('/showtimes', async (req, res) => {
     results = results.map(item => {
       return {
         id: item.id,
-        picture: item.picture,
+        movieId: item.movieId,
+        movieTitle: item.movieTitle,
+        movieCategory: item.category,
+        picture: `${process.env.APP_URL}/cinemas/${item.picture}`,
         cinemaName: item.cinemaName,
         address: item.address,
         pricePerSeat: item.pricePerSeat,
+        city: item.city,
+        showTimeDate: item.showTimeDate,
         showTime: showTimes.filter(showTimeItem => showTimeItem.id === item.id).map(item => item.showTime)
       }
     })
@@ -99,6 +108,20 @@ router.get('/showtimes', async (req, res) => {
   }
 })
 
-router.use('/admin', authMiddleware.verifyToken, require('./adminRoute'))
+router.get('/selected-showtime', async (req, res) => {
+  const { showTimeDate, timeId, cinemaId, movieId } = req.query
+  try {
+    const results = await Showtimes.findAllByCond({ showTimeDate, timeId, cinemaId, movieId })
+    console.log(results)
+    return response(res, 200, true, 'Here it is, your selected Showtime id', { showTimeId: results[0].id })
+  } catch (error) {
+    return response(res, 500, false, error.message)
+  }
+})
+
+router.use('/admin', authMiddleware.isAdmin, require('./adminRoute'))
+router.use('/transaction', authMiddleware.isUser, require('./transactionRoute'))
+router.get('/ticket/:id', authMiddleware.isUser, ticketController.getTicketByMovieId)
+router.get('/soldseats', authMiddleware.isUser, ticketController.getAllSoldSeats)
 
 module.exports = router

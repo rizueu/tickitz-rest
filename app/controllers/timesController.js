@@ -24,3 +24,13 @@ exports.getTimes = async (req, res) => {
     return response(res, 500, false, error.message)
   }
 }
+
+exports.getTimeId = async (req, res) => {
+  const { showTime } = req.query
+  try {
+    const results = await Times.findAll({ showTime })
+    return response(res, 200, true, `timeId of ${showTime}`, results[0].id)
+  } catch (error) {
+    return response(res, 500, false, error.message)
+  }
+}

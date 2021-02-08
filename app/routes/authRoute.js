@@ -7,7 +7,7 @@ router.post('/login', login)
 router.patch('/forgot_password', forgotPassword)
 router.patch('/activate', activate)
 router.patch('/password/:id/:email', editPassword)
-router.patch('/user/:id', authMiddleware.verifyToken, editUser)
-router.get('/user/:id', authMiddleware.verifyToken, getUser)
+router.patch('/user/:id', authMiddleware.isUser, editUser)
+router.get('/user/:id', authMiddleware.isUser, getUser)
 
 module.exports = router

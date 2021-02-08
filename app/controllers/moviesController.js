@@ -17,6 +17,7 @@ exports.createMovie = async (req, res) => {
     // // upload an images
     const { title, releaseDate, duration, director, casts, synopsis, genreId, category } = req.body
     const picture = await upload(req, 'movies')
+    if (typeof picture === 'object' && picture.success === false) return response(res, picture.status, picture.success, picture.message)
     const data = {
       title,
       releaseDate,
@@ -42,12 +43,11 @@ exports.createMovie = async (req, res) => {
         to: recipients,
         subject: 'Update New Movie',
         html: `<h3>${newMovie[0].title}</h3>`
-      }, (error, info) => {
+      }, (error) => {
         if (error) return response(res, 500, false, error.response)
-        return response(res, 201, true, 'Successfully registered a new User.', info)
       })
-      return response(res, 200, true, 'Successfully create a new Movie', newMovie[0])
     }
+    return response(res, 200, true, 'Successfully create a new Movie')
   } catch (error) {
     return response(res, 500, false, error.message)
   }
@@ -103,7 +103,7 @@ exports.getMoviesByMonth = async (req, res) => {
     if (results.length < 1) return response(res, 400, false, `Movie with month: ${month} is not exists`)
     return response(res, 200, true, `Movie with month: ${month}`, results)
   } catch (error) {
-    return response(res, 500, false, error.message)
+    return response(res, 400, false, error.message)
   }
 }
 
