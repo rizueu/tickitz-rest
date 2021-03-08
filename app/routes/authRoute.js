@@ -1,6 +1,10 @@
 const router = require('express').Router()
+const upload = require('express-fileupload')
+
 const { register, activate, login, forgotPassword, editUser, editPassword, uploadPhoto, getUser } = require('../controllers/authController')
 const authMiddleware = require('../middlewares/auth')
+
+router.use(upload({ createParentPath: true }))
 
 router.post('/register', register)
 router.post('/login', login)

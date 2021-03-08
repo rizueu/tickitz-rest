@@ -66,7 +66,6 @@ exports.getUserOrderHistory = async (req, res) => {
         return {
           ...array[index],
           showTimeDate: moment(item.showTimeDate).format('DD MMMM YYYY'),
-          cinemaPoster: process.env.APP_URL + '/public/cinemas/' + item.cinemaPoster
 
         }
       })

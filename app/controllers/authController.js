@@ -147,24 +147,14 @@ exports.editUser = async (req, res) => {
     const previousResult = await User.getUserByCondition({
       id: req.data.id
     })
-    let picture = previousResult[0].picture
-    if (req.files) {
-      picture = await upload(req, 'profile_picture')
 
-      if (typeof picture === 'object') {
-        return response(res, picture.status, picture.success, picture.message)
-      }
-    }
-
-    const hash = await bcrypt.hash(req.body.password, 8)
     const body = {
       firstName: req.body.firstName,
       lastName: req.body.lastName,
       email: req.body.email,
-      password: hash,
-      picture,
       phone: req.body.phone
     }
+
     const results = await User.update(req.data.id, req.body.email, body)
 
     if (!results) {
@@ -221,7 +211,7 @@ exports.getUser = async (req, res) => {
 }
 
 exports.uploadPhoto = async (req, res) => {
-  const picture = await upload(req, 'profile picture')
+  const picture = await upload(req, 'profile')
 
   if (typeof picture === 'object') {
     return response(res, picture.status, picture.success, picture.message)
