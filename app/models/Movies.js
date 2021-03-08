@@ -54,7 +54,8 @@ class Movies extends Database {
                   INNER JOIN movie_genres ON movies.id = movie_genres.movie_id
                   INNER JOIN genres ON genres.id = movie_genres.genre_id
                   WHERE movies.title LIKE "%${search}%"
-                  ORDER BY ${order} ${sort}`
+                  ORDER BY ${order} ${sort}
+	    	LIMIT ${limit} OFFSET ${offset}`
       const query = this.db.query(sql, (error, results) => {
         if (error) return reject(new Error(error))
         const movieGenres = []

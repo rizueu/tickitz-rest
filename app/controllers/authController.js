@@ -219,3 +219,31 @@ exports.getUser = async (req, res) => {
     return response(res, 500, false, 'Server Error')
   }
 }
+
+exports.uploadPhoto = async (req, res) => {
+  const picture = await upload(req, 'profile picture')
+
+  if (typeof picture === 'object') {
+    return response(res, picture.status, picture.success, picture.message)
+  }
+
+  try {
+    const results = await User.updatePhoto(req.data.id, {
+      picture: picture
+    })
+
+    if (!results) {
+      fs.unlink('./public/uploads/' + picture, err => {
+        if (err) {
+          console.log(err)
+        }
+      })
+      return response(res, 400, false, 'Failed to upload profile')
+    } else {
+      return response(res, 200, true, 'Success to upload profile')
+    }
+  } catch (error) {
+    response(res, 500, false, 'Server Error')
+    throw new Error(error)
+  }
+}

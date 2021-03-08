@@ -6,6 +6,22 @@ class Auth extends Database {
     this.table = 'users'
   }
 
+updatePhoto (id, body) {
+    return new Promise((resolve, reject) => {
+      const sql = `UPDATE ${this.table} SET ? WHERE id = ?`
+      const b = this.db.query(sql, [body, id], (err, result) => {
+        if (err) {
+          return reject(err)
+        } else if (result.affectedRows < 1) {
+          resolve(false)
+        } else {
+          resolve(true)
+        }
+      })
+      console.log(b.sql)
+    })
+  }
+
   activate (id) {
     return new Promise((resolve, reject) => {
       const sql = `UPDATE ${this.table} SET verified = true WHERE id = ?`

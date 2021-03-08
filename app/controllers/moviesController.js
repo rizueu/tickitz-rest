@@ -76,7 +76,7 @@ exports.getMovies = async (req, res) => {
     const query = queryKey.map((item, index) => item + '=' + queryValue[index]).join('&')
     const nextPageLink = nextMovies.length > 0 ? `${process.env.APP_URL}/api/v1/admin/movies?${query}` : null
     const prevPageLink = (offset - limit) >= 0 ? `${process.env.APP_URL}/api/v1/admin/movies?${query}` : null
-    return response(res, 200, true, 'All of the movies', movies, prevPageLink, nextPageLink)
+    return response(res, 200, true, 'All of the movies', movies, prevPageLink, nextPageLink, page ? page : 1)
   } catch (error) {
     return response(res, 500, false, error.message)
   }

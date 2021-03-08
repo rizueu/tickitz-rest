@@ -1,6 +1,6 @@
 // ===== Response
 module.exports = (res, status, success, message, results, ...optionalProperty) => {
-  const [prevPageLink, nextPageLink] = optionalProperty
+  const [prevPageLink, nextPageLink, currentPage] = optionalProperty
   if (results && Array.isArray(results)) {
     return res.status(status).json({
       success,
@@ -8,6 +8,7 @@ module.exports = (res, status, success, message, results, ...optionalProperty) =
       results,
       pageInfo: {
         length: results.length,
+	currentPage: currentPage,
         previousPageLink: optionalProperty ? prevPageLink : null,
         nextPageLink: optionalProperty ? nextPageLink : null
       }
