@@ -49,32 +49,46 @@ class Movies extends Database {
   getAllMovies (limit, offset, search, order, sort) {
     return new Promise((resolve, reject) => {
       const sql = `SELECT 
-                    movies.id, movies.title, movies.releaseDate, movies.month, movies.duration, movies.category, movies.director, movies.casts, movies.synopsis, movies.picture, movies.createdAt, movies.updatedAt, GROUP_CONCAT(DISTINCT genres.name) AS genres
-                  FROM movies 
-                  INNER JOIN movie_genres ON movies.id = movie_genres.movie_id
-                  INNER JOIN genres ON genres.id = movie_genres.genre_id
-                  WHERE movies.title LIKE "%${search}%"
-                  GROUP BY movies.id
-                  ORDER BY ${order} ${sort}
-                  LIMIT ${limit} OFFSET ${offset}`
-      const query = this.db.query(sql, (err, results) => {
-        if (err) {
-          return reject(err)
-        } else if (results.length < 1) {
-          return resolve({
-            status: 200,
-            success: true,
-            message: 'movies unavailable',
-            results: []
-          })
-        } else {
-          return resolve({
-            status: 200,
-            success: true,
-            message: 'Get all movies successfully',
-            results: results
-          })
-        }
+      movies.id, movies.title, movies.releaseDate, movies.month, movies.duration, movies.category, movies.director, movies.casts, movies.synopsis, movies.picture, movies.createdAt, movies.updatedAt, GROUP_CONCAT(DISTINCT genres.name) AS genres
+    FROM movies 
+    INNER JOIN movie_genres ON movies.id = movie_genres.movie_id
+    INNER JOIN genres ON genres.id = movie_genres.genre_id
+    WHERE movies.title LIKE "%${search}%"
+    GROUP BY movies.id
+    ORDER BY ${order} ${sort}
+    LIMIT ${limit} OFFSET ${offset}`
+      const query = this.db.query(sql, (error, results) => {
+        if (error) return reject(new Error(error))
+        // const movieGenres = []
+        // results.forEach((item) => {
+        //   movieGenres.push({
+        //     id: item.id,
+        //     genre: item.genres
+        //   })
+        // })
+
+        // let data = results.filter((item, index, array) => {
+        //   return ((item.id !== ((index >= array.length - 1 ? 0 : array[index + 1].id))))
+        // })
+
+        // data = data.map((item) => {
+        //   return {
+        //     id: item.id,
+        //     title: item.title,
+        //     releaseDate: item.releaseDate,
+        //     month: item.month,
+        //     duration: item.duration,
+        //     category: item.category,
+        //     director: item.director,
+        //     casts: item.casts,
+        //     synopsis: item.synopsis,
+        //     picture: `${process.env.APP_URL}/movies/${item.picture}`,
+        //     genres: movieGenres.filter(genreItem => genreItem.id === item.id).map(item => item.genre).join(', '),
+        //     createdAt: item.createdAt,
+        //     updatedAt: item.updatedAt
+        //   }
+        // })
+        return resolve(results)
       })
       console.log(query.sql)
     })
