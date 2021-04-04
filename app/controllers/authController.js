@@ -85,7 +85,7 @@ exports.register = async (req, res) => {
 
 exports.activate = async (req, res) => {
   const { id, email } = req.body;
-  if (!id && !email) {
+  if (!id) {
     return response(res, 400, false, "Invalid Request");
   }
   try {
