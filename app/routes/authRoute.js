@@ -1,18 +1,27 @@
-const router = require('express').Router()
-const upload = require('express-fileupload')
+const router = require("express").Router();
+const upload = require("express-fileupload");
 
-const { register, activate, login, forgotPassword, editUser, editPassword, uploadPhoto, getUser } = require('../controllers/authController')
-const authMiddleware = require('../middlewares/auth')
+const {
+  register,
+  activate,
+  login,
+  forgotPassword,
+  editUser,
+  editPassword,
+  uploadPhoto,
+  getUser,
+} = require("../controllers/authController");
+const authMiddleware = require("../middlewares/auth");
 
-router.use(upload({ createParentPath: true }))
+router.use(upload({ createParentPath: true }));
 
-router.post('/register', register)
-router.post('/login', login)
-router.patch('/user/upload', authMiddleware.isUser, uploadPhoto)
-router.patch('/forgot_password', forgotPassword)
-router.patch('/activate', activate)
-router.patch('/password/:id/:email', editPassword)
-router.patch('/user/:id', authMiddleware.isUser, editUser)
-router.get('/user/:id', authMiddleware.isUser, getUser)
+router.post("/register", register);
+router.post("/login", login);
+router.patch("/user/upload", authMiddleware.isUser, uploadPhoto);
+router.patch("/forgot_password", forgotPassword);
+router.patch("/activate", activate);
+router.patch("/password/:id/:email", editPassword);
+router.patch("/user/:id", authMiddleware.isUser, editUser);
+router.get("/user/:id", authMiddleware.isUser, getUser);
 
-module.exports = router
+module.exports = router;
