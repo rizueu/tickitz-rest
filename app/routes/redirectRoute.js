@@ -4,7 +4,7 @@ const express = require("express");
 // init router
 const router = express.Router();
 
-router.get("/redirect/:method", (req, res) => {
+router.get("/:method", (req, res) => {
   const { method } = req.params;
   const { id } = req.query;
 
