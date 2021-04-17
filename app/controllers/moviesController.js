@@ -102,7 +102,7 @@ exports.getMovies = async (req, res) => {
     const query = queryKey
       .map((item, index) => item + "=" + queryValue[index])
       .join("&");
-    const totalPage = allMovie.length / Number(limit);
+    const totalPage = Math.ceil(allMovie.length / Number(limit));
     const nextPageLink =
       nextMovies.length > 0
         ? `${process.env.APP_URL}/api/v1/admin/movies?${query}`
