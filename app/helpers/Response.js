@@ -1,6 +1,13 @@
 // ===== Response
-module.exports = (res, status, success, message, results, ...optionalProperty) => {
-  const [prevPageLink, nextPageLink, currentPage] = optionalProperty
+module.exports = (
+  res,
+  status,
+  success,
+  message,
+  results,
+  ...optionalProperty
+) => {
+  const [prevPageLink, nextPageLink, currentPage, totalPage] = optionalProperty;
   if (results && Array.isArray(results)) {
     return res.status(status).json({
       success,
@@ -8,21 +15,22 @@ module.exports = (res, status, success, message, results, ...optionalProperty) =
       results,
       pageInfo: {
         length: results.length,
-	currentPage: currentPage,
+        currentPage: currentPage,
+        totalPage: totalPage,
         previousPageLink: optionalProperty ? prevPageLink : null,
-        nextPageLink: optionalProperty ? nextPageLink : null
-      }
-    })
+        nextPageLink: optionalProperty ? nextPageLink : null,
+      },
+    });
   } else if (results && !Array.isArray(results)) {
     return res.status(status).json({
       success,
       message,
-      results
-    })
+      results,
+    });
   } else {
     return res.status(status).json({
       success,
-      message
-    })
+      message,
+    });
   }
-}
+};
