@@ -82,6 +82,7 @@ exports.getMovies = async (req, res) => {
     return response(res, 400, false, "Bad Request");
   }
   try {
+    const allMovie = await Movies.getAllMovies();
     const movies = await Movies.getAllMovies(
       limit,
       offset,
@@ -101,7 +102,7 @@ exports.getMovies = async (req, res) => {
     const query = queryKey
       .map((item, index) => item + "=" + queryValue[index])
       .join("&");
-    const totalPage = movies.length / limit;
+    const totalPage = allMovie.length / Number(limit);
     const nextPageLink =
       nextMovies.length > 0
         ? `${process.env.APP_URL}/api/v1/admin/movies?${query}`
