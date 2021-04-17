@@ -82,7 +82,7 @@ exports.getMovies = async (req, res) => {
     return response(res, 400, false, "Bad Request");
   }
   try {
-    const allMovie = await Movies.getAllMovies();
+    const allMovie = await Movies.findAll();
     const movies = await Movies.getAllMovies(
       limit,
       offset,
