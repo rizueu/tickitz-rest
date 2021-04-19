@@ -16,7 +16,7 @@ app.use(morgan("dev"));
 app.use(helmet.noSniff());
 
 // Set up CORS
-const whiteList = ["http://localhost:3000"];
+const whiteList = ["http://localhost:3000", "http://23.21.108.250"];
 
 app.use(
   cors({
