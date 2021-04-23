@@ -44,11 +44,11 @@ exports.register = async (req, res) => {
 
     if (results.affectedRows > 0) {
       const newUser = await User.findAll({ id: results.insertId });
-      var html = `<a href="http://localhost:3000/auth/activate?id=${
+      var html = `<a href="http://23.21.108.250/auth/activate?id=${
         newUser[0].id
       }&key=${cryptr.encrypt(
         newUser[0].email
-      )}">http://localhost:3000/auth/activate?id=${
+      )}">http://23.21.108.250/auth/activate?id=${
         newUser[0].id
       }&key=${cryptr.encrypt(newUser[0].email)}</a>`;
       if (req.query.v === "Mobile") {
